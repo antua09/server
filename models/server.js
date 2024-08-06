@@ -2,13 +2,13 @@ const express = require("express");
 const cors = require('cors');
 const https = require('https');
 const fs = require('fs');
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || 3000;
-        this.mongoose = mongoose;
+        //this.mongoose = mongoose;
 
         this.middlewares();
         this.routers();
@@ -18,7 +18,7 @@ class Server {
 
     conectarMongoose() {
         // Conexion a MongoDB
-        this.mongoose.connect('mongodb://localhost:27017/DB_empleados', {});
+        //this.mongoose.connect('mongodb://localhost:27017/DB_empleados', {});
 
         // Agregar schema
         let schemaEmpleado = new this.mongoose.Schema({

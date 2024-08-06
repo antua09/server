@@ -2,39 +2,39 @@ const express = require("express");
 const cors = require('cors');
 const https = require('https');
 const fs = require('fs');
-//const mongoose = require('mongoose');
+// const mongoose = require('mongoose'); // Comentado
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || 3000;
-        //this.mongoose = mongoose;
+        // this.mongoose = mongoose; // Comentado
 
         this.middlewares();
         this.routers();
         this.listen();
-        this.conectarMongoose();
+        // this.conectarMongoose(); // Comentado
     }
 
-    conectarMongoose() {
+    // conectarMongoose() { // Comentado
         // Conexion a MongoDB
-        //this.mongoose.connect('mongodb://localhost:27017/DB_empleados', {});
+        // this.mongoose.connect('mongodb://localhost:27017/DB_empleados', {}); // Comentado
 
         // Agregar schema
-        let schemaEmpleado = new this.mongoose.Schema({
-            nombre: String,
-            departamento: String,
-            numero: String,
-            puesto: String,
-        });
+        // let schemaEmpleado = new this.mongoose.Schema({ // Comentado
+        //     nombre: String,
+        //     departamento: String,
+        //     numero: String,
+        //     puesto: String,
+        // });
 
-        let schemaEstadoCompactador = new this.mongoose.Schema({
-            estado: Number,
-        });
+        // let schemaEstadoCompactador = new this.mongoose.Schema({ // Comentado
+        //     estado: Number,
+        // });
 
-        this.empleados = this.mongoose.model('empleados', schemaEmpleado, 'empleados');
-        this.estadoCompactador = this.mongoose.model('estadoCompactador', schemaEstadoCompactador, 'estadoCompactador');
-    }
+        // this.empleados = this.mongoose.model('empleados', schemaEmpleado, 'empleados'); // Comentado
+        // this.estadoCompactador = this.mongoose.model('estadoCompactador', schemaEstadoCompactador, 'estadoCompactador'); // Comentado
+    // } // Comentado
 
     middlewares() {
         this.app.use(cors());
@@ -44,14 +44,15 @@ class Server {
     routers() {
         this.app.get("/consultar", async (req, res) => {
             console.log("Ruta consultar...");
-            const empleado = await this.empleados.find({});
-            console.log(empleado);
-            res.json(empleado);
+            // const empleado = await this.empleados.find({}); // Comentado
+            // console.log(empleado); // Comentado
+            // res.json(empleado); // Comentado
+            res.json({ mensaje: "Consulta deshabilitada" }); // Línea añadida para no romper la ruta
         });
 
         this.app.get("/encenderCompactador", async (req, res) => {
             try {
-                await this.estadoCompactador.updateOne({}, { $set: { estado: 1 } }, { upsert: true });
+                // await this.estadoCompactador.updateOne({}, { $set: { estado: 1 } }, { upsert: true }); // Comentado
                 console.log("Compactador encendido");
                 res.status(200).send('Status: OK');
             } catch (error) {
@@ -62,7 +63,7 @@ class Server {
 
         this.app.get("/apagarCompactador", async (req, res) => {
             try {
-                await this.estadoCompactador.updateOne({}, { $set: { estado: 0 } }, { upsert: true });
+                // await this.estadoCompactador.updateOne({}, { $set: { estado: 0 } }, { upsert: true }); // Comentado
                 console.log("Compactador apagado");
                 res.status(200).send('Status: OK');
             } catch (error) {
@@ -77,14 +78,14 @@ class Server {
             let puesto = req.query.puesto;
             let departamento = req.query.dep;
 
-            let empleado1 = new this.empleados({
-                nombre: nombre,
-                numero: numero,
-                puesto: puesto,
-                departamento: departamento
-            });
-            empleado1.save();
-            res.send("ok");
+            // let empleado1 = new this.empleados({ // Comentado
+            //     nombre: nombre,
+            //     numero: numero,
+            //     puesto: puesto,
+            //     departamento: departamento
+            // });
+            // empleado1.save(); // Comentado
+            res.send("Registro deshabilitado"); // Línea añadida para no romper la ruta
         });
 
         // Agregar una ruta para consultar registros (tema libre)

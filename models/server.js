@@ -118,7 +118,7 @@ class Server {
             cert: fs.readFileSync('cert.crt'),
         }, 
         this.app).listen(this.port, () => {
-            console.log("https://127.0.0.1:" + this.port);
+            console.log("http://127.0.0.1:" + this.port);
         });
     }
 }

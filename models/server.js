@@ -1,15 +1,40 @@
 const express = require("express");
 const cors = require('cors');
+const https = require('https');
+const fs = require('fs');
+// const mongoose = require('mongoose'); // Comentado
 
 class Server {
     constructor() {
         this.app = express();
-        this.port = process.env.PORT || 3000; // Usar el puerto proporcionado por Render o 3000 como respaldo
+        this.port = process.env.PORT || 3000;
+        // this.mongoose = mongoose; // Comentado
 
         this.middlewares();
         this.routers();
         this.listen();
+        // this.conectarMongoose(); // Comentado
     }
+
+    // conectarMongoose() { // Comentado
+        // Conexion a MongoDB
+        // this.mongoose.connect('mongodb://localhost:27017/DB_empleados', {}); // Comentado
+
+        // Agregar schema
+        // let schemaEmpleado = new this.mongoose.Schema({ // Comentado
+        //     nombre: String,
+        //     departamento: String,
+        //     numero: String,
+        //     puesto: String,
+        // });
+
+        // let schemaEstadoCompactador = new this.mongoose.Schema({ // Comentado
+        //     estado: Number,
+        // });
+
+        // this.empleados = this.mongoose.model('empleados', schemaEmpleado, 'empleados'); // Comentado
+        // this.estadoCompactador = this.mongoose.model('estadoCompactador', schemaEstadoCompactador, 'estadoCompactador'); // Comentado
+    // } // Comentado
 
     middlewares() {
         this.app.use(cors());
@@ -17,29 +42,55 @@ class Server {
     }
 
     routers() {
-        this.app.get("/", (req, res) => {
-            res.send("Servidor funcionando correctamente");
+        this.app.get("/consultar", async (req, res) => {
+            console.log("Ruta consultar...");
+            // const empleado = await this.empleados.find({}); // Comentado
+            // console.log(empleado); // Comentado
+            // res.json(empleado); // Comentado
+            res.json({ mensaje: "Consulta deshabilitada" }); // Línea añadida para no romper la ruta
         });
 
-        this.app.get("/consultar", (req, res) => {
-            res.json({ mensaje: "Consulta deshabilitada" });
+        this.app.get("/encenderCompactador", async (req, res) => {
+            try {
+                // await this.estadoCompactador.updateOne({}, { $set: { estado: 1 } }, { upsert: true }); // Comentado
+                console.log("Compactador encendido");
+                res.status(200).send('Status: OK');
+            } catch (error) {
+                console.error('Error al actualizar el estado:', error);
+                res.status(500).json({ error: 'Error al actualizar el estado' });
+            }
         });
 
-        this.app.get("/encenderCompactador", (req, res) => {
-            console.log("Compactador encendido");
-            res.status(200).send('Status: OK');
-        });
-
-        this.app.get("/apagarCompactador", (req, res) => {
-            console.log("Compactador apagado");
-            res.status(200).send('Status: OK');
+        this.app.get("/apagarCompactador", async (req, res) => {
+            try {
+                // await this.estadoCompactador.updateOne({}, { $set: { estado: 0 } }, { upsert: true }); // Comentado
+                console.log("Compactador apagado");
+                res.status(200).send('Status: OK');
+            } catch (error) {
+                console.error('Error al actualizar el estado:', error);
+                res.status(500).json({ error: 'Error al actualizar el estado' });
+            }
         });
 
         this.app.get("/registrar", (req, res) => {
-            res.send("Registro deshabilitado");
+            let nombre = req.query.nombre;
+            let numero = req.query.numero;
+            let puesto = req.query.puesto;
+            let departamento = req.query.dep;
+
+            // let empleado1 = new this.empleados({ // Comentado
+            //     nombre: nombre,
+            //     numero: numero,
+            //     puesto: puesto,
+            //     departamento: departamento
+            // });
+            // empleado1.save(); // Comentado
+            res.send("Registro deshabilitado"); // Línea añadida para no romper la ruta
         });
 
+        // Agregar una ruta para consultar registros (tema libre)
         this.app.get("/ciudades", (req, res) => {
+            console.log("Ruta ciudades...");
             let ciudades = [
                 {
                     "Ciudad": "Madrid",
@@ -62,14 +113,14 @@ class Server {
     }
 
     listen() {
-        this.app.listen(this.port, () => {
-            console.log(`Aplicación corriendo en http://127.0.0.1:${this.port}`);
-            console.log(`Aplicación corriendo en puerto ${this.port}`);
+        https.createServer({
+            key: fs.readFileSync('cert.key'),
+            cert: fs.readFileSync('cert.crt'),
+        }, 
+        this.app).listen(this.port, () => {
+            console.log("http://127.0.0.1:" + this.port);
         });
     }
 }
 
 module.exports = Server;
-
-// Iniciar el servidor
-const server = new Server();

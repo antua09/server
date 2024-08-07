@@ -113,14 +113,10 @@ class Server {
     }
 
     listen() {
-        https.createServer({
-            key: fs.readFileSync('cert.key'),
-            cert: fs.readFileSync('cert.crt'),
-        }, 
-        this.app).listen(this.port, () => {
-            console.log("http://127.0.0.1:" + this.port);
+        this.app.listen(this.port, '0.0.0.0', () => {
+            console.log(`Aplicación corriendo en http://0.0.0.0:${this.port}`);
+            console.log(`Aplicación corriendo en puerto ${this.port}`);
         });
     }
 }
-
 module.exports = Server;
